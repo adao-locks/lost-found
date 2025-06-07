@@ -29,20 +29,17 @@ export class LoginComponent {
         tipo: 'colaborador'
       }
     ];
+
     const usuario = usuarios.find(
       u => u.email === this.email && u.senha === this.password
     );
 
     if (usuario) {
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuario)); // <-- IMPORTANTE
       this.router.navigate(['/dashboard']);
     } else {
       this.errorMessage = 'E-mail ou senha inválidos';
     }
-    localStorage.setItem('usuarioLogado', JSON.stringify({
-      nome: 'João Silva',
-      tipo: 'admin'
-    }));
   }
 }

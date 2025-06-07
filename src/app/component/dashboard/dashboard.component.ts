@@ -21,14 +21,11 @@ interface Reivindicacao {
     standalone: false
 })
 export class DashboardComponent {
-  userName = '';
-
-  constructor(private router: Router) {}
-
+  usuarioLogado = { nome: '', tipo: 'colaborador' };
   itens: Item[] = [];
+  itensRecentes: Item[] = [];
   reivindicacoes: Reivindicacao[] = [];
-  usuarioLogado: { nome: string; tipo: 'admin' | 'colaborador' } = { nome: '', tipo: 'colaborador' };
-
+  reivindicacoesPendentes: Reivindicacao[] = [];
   stats = {
     total: 0,
     disponiveis: 0,
@@ -36,36 +33,26 @@ export class DashboardComponent {
     reivindicacoes: 0
   };
 
-  itensRecentes: Item[] = [];
-  reivindicacoesPendentes: Reivindicacao[] = [];
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{"nome": "Visitante", "tipo": "colaborador"}');
+    const usuarioStr = localStorage.getItem('usuarioLogado');
+    if (usuarioStr) {
+      this.usuarioLogado = JSON.parse(usuarioStr);
+      document.body.classList.toggle('admin', this.usuarioLogado.tipo === 'admin');
+    }
 
-    this.itens = [
-      { nome: 'Carteira de couro', local: 'Biblioteca Central', data: '2024-01-15', status: 'disponivel' },
-      { nome: 'Óculos de sol', local: 'Cantina', data: '2024-01-14', status: 'disponivel' },
-      { nome: 'Chaves do carro', local: 'Estacionamento', data: '2024-01-13', status: 'devolvido' },
-      { nome: 'Celular Samsung', local: 'Sala 201', data: '2024-01-12', status: 'descartado' }
-    ];
+    const itensSalvos = localStorage.getItem('itens');
+    this.itens = itensSalvos ? JSON.parse(itensSalvos) : [];
 
-    this.reivindicacoes = [
-      { usuario: 'Maria Santos', item: 'Carteira de couro', status: 'pendente' },
-      { usuario: 'Pedro Costa', item: 'Celular Samsung', status: 'pendente' },
-      { usuario: 'Joana Lima', item: 'Chaves do carro', status: 'aprovado' }
-    ];
+    const reivSalvas = localStorage.getItem('reivindicacoes');
+    this.reivindicacoes = reivSalvas ? JSON.parse(reivSalvas) : [];
 
     this.calcularEstatisticas();
     this.carregarItensRecentes();
     this.carregarReivindicacoesPendentes();
   }
 
-  calcularEstatisticas() {
-    this.stats.total = this.itens.length;
-    this.stats.disponiveis = this.itens.filter(i => i.status === 'disponivel').length;
-    this.stats.devolvidos = this.itens.filter(i => i.status === 'devolvido').length;
-    this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'pendente').length;
-  }
 
   carregarItensRecentes() {
     this.itensRecentes = [...this.itens]
@@ -76,6 +63,14 @@ export class DashboardComponent {
   carregarReivindicacoesPendentes() {
     this.reivindicacoesPendentes = this.reivindicacoes.filter(r => r.status === 'pendente');
   }
+
+  calcularEstatisticas() {
+    this.stats.total = this.itens.length;
+    this.stats.disponiveis = this.itens.filter(i => i.status === 'disponivel').length;
+    this.stats.devolvidos = this.itens.filter(i => i.status === 'devolvido').length;
+    this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'pendente').length;
+  }
+
 
   logout() {
     localStorage.clear();

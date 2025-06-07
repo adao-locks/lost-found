@@ -1,0 +1,56 @@
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <i class="fas fa-search"></i>
+      <span>Achados & Perdidos</span>
+    </div>
+    <button class="sidebar-toggle" id="sidebarToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li class="menu-item">
+      <a href="/dashboard" routerLinkActive="active" class="menu-link" data-section="dashboard">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="/iten-found" routerLinkActive="active" class="menu-link" data-section="itens">
+        <i class="fas fa-box"></i>
+        <span>Itens Encontrados</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a routerLink="/register" routerLinkActive="active" class="menu-link">
+        <i class="fas fa-plus-circle"></i>
+        <span>Cadastrar Item</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="" routerLinkActive="active" class="menu-link" data-section="reivindicacoes">
+        <i class="fas fa-hand-paper"></i>
+        <span>Reivindicações</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="" routerLinkActive="active" class="menu-link" data-section="historico">
+        <i class="fas fa-history"></i>
+        <span>Histórico</span>
+      </a>
+    </li>
+    <li class="menu-item admin-only">
+      <a href="" routerLinkActive="active" class="menu-link" data-section="usuarios">
+        <i class="fas fa-users"></i>
+        <span>Usuários</span>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="" routerLinkActive="active" class="menu-link" data-section="relatorios">
+        <i class="fas fa-chart-bar"></i>
+        <span>Relatórios</span>
+      </a>
+    </li>
+  </ul>
+</nav>
