@@ -8,6 +8,7 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { RegisterComponent } from './component/register/register.component';
 import { ItemFoundComponent } from './component/item-found/item-found.component';
 import { SidebarComponent } from './component/sidebar/sidebar.component';
+import { NavbarComponent } from './component/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SidebarComponent } from './component/sidebar/sidebar.component';
     DashboardComponent,
     RegisterComponent,
     ItemFoundComponent,
-    SidebarComponent
+    SidebarComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

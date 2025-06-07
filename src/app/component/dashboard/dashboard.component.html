@@ -1,29 +1,8 @@
 <app-sidebar></app-sidebar>
 
 <main class="main-content">
-  <header class="header">
-    <div class="header-left">
-      <button class="mobile-menu-toggle" id="mobileMenuToggle">
-        <i class="fas fa-bars"></i>
-      </button>
-      <h1 class="page-title">Dashboard</h1>
-    </div>
-    <div class="header-right">
-      <div class="user-info">
-        <span class="user-role">
-          {{ usuarioLogado.tipo === 'admin' ? 'Administrador' : 'Colaborador' }}
-        </span>
-        <span class="user-name">{{ usuarioLogado.nome }}</span>
-        <div class="user-avatar">
-          <i class="fas fa-user"></i>
-        </div>
-        <button (click)="logout()">Sair</button>
-      </div>
-      <button class="logout-btn">
-        <i class="fas fa-sign-out-alt"></i>
-      </button>
-    </div>
-  </header>
+
+  <app-navbar></app-navbar>
 
   <section id="dashboard" class="content-section active">
     <div class="stats-grid">
@@ -81,92 +60,13 @@
             <strong>{{ r.usuario }}</strong>
             <span>{{ r.item }}</span>
           </div>
-          <div class="claim-actions admin-only" *ngIf="usuarioLogado.tipo === 'admin'">
-            <button class="btn-approve">Aprovar</button>
-            <button class="btn-reject">Recusar</button>
+          <div class="claim-actions" *ngIf="usuarioLogado.tipo === 'admin'">
+            <button class="btn-approve" (click)="aprovarReivindicacao(r)">Aprovar</button>
+            <button class="btn-reject" (click)="recusarReivindicacao(r)">Recusar</button>
           </div>
         </div>
       </div>
       </div>
     </div>
   </section>
-
-  <section id="reivindicacoes" class="content-section">
-    <div class="section-header">
-      <h2>Reivindicações</h2>
-    </div>
-
-    <div class="claims-container">
-      <div class="claim-card">
-        <div class="claim-header">
-          <div class="claim-info">
-            <h3>Maria Santos</h3>
-            <span class="claim-date">Solicitado em: 15/01/2024 às 14:30</span>
-          </div>
-          <span class="claim-status pending">Pendente</span>
-        </div>
-        <div class="claim-body">
-          <div class="claimed-item">
-            <strong>Item reivindicado:</strong> Carteira de couro marrom
-          </div>
-          <div class="claim-description">
-            <strong>Justificativa:</strong>
-            <p>
-              Perdi minha carteira na biblioteca central na segunda-feira. É uma
-              carteira de couro marrom com meus documentos pessoais e cartões.
-            </p>
-          </div>
-          <div class="claim-contact">
-            <strong>Contato:</strong> maria.santosemail.com | (11) 99999-9999
-          </div>
-        </div>
-        <div class="claim-actions">
-          <button class="btn-approve">
-            <i class="fas fa-check"></i>
-            Aprovarasdadsdsa
-          </button>
-          <button class="btn-reject">
-            <i class="fas fa-times"></i>
-            Recusar
-          </button>
-          <button class="btn-secondary">
-            <i class="fas fa-comment"></i>
-            Comentar
-          </button>
-        </div>
-      </div>
-
-      <div class="claim-card">
-        <div class="claim-header">
-          <div class="claim-info">
-            <h3>Pedro Costa</h3>
-            <span class="claim-date">Solicitado em: 14/01/2024 às 16:45</span>
-          </div>
-          <span class="claim-status approved">Aprovado</span>
-        </div>
-        <div class="claim-body">
-          <div class="claimed-item">
-            <strong>Item reivindicado:</strong> iPhone 12 Pro
-          </div>
-          <div class="claim-description">
-            <strong>Justificativa:</strong>
-            <p>
-              Esqueci meu celular na sala 201 após a aula. É um iPhone 12 Pro
-              preto com capa azul.
-            </p>
-          </div>
-          <div class="claim-contact">
-            <strong>Contato:</strong> pedro.costaemail.com | (11) 88888-8888
-          </div>
-        </div>
-        <div class="claim-actions">
-          <span class="approval-info">
-            <i class="fas fa-user"></i>
-            Aprovado por: João Silva em 15/01/2024
-          </span>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>

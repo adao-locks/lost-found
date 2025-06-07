@@ -53,7 +53,6 @@ export class DashboardComponent {
     this.carregarReivindicacoesPendentes();
   }
 
-
   carregarItensRecentes() {
     this.itensRecentes = [...this.itens]
       .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
@@ -71,9 +70,30 @@ export class DashboardComponent {
     this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'pendente').length;
   }
 
+  aprovarReivindicacao(reivindicacao: any) {
+    reivindicacao.status = 'aprovado';
 
-  logout() {
-    localStorage.clear();
-    window.location.href = '/';
+    const item = this.itens.find(i => i.nome === reivindicacao.item);
+    if (item) item.status = 'devolvido';
+
+    this.salvarAlteracoes();
+  }
+
+  recusarReivindicacao(reivindicacao: any) {
+    reivindicacao.status = 'recusado';
+
+    const item = this.itens.find(i => i.nome === reivindicacao.item);
+    if (item) item.status = 'descartado';
+
+    this.salvarAlteracoes();
+  }
+
+  salvarAlteracoes() {
+    localStorage.setItem('reivindicacoes', JSON.stringify(this.reivindicacoes));
+    localStorage.setItem('itens', JSON.stringify(this.itens));
+
+    this.calcularEstatisticas();
+    this.carregarItensRecentes();
+    this.carregarReivindicacoesPendentes();
   }
 }

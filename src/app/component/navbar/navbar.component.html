@@ -1,0 +1,23 @@
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h1 class="page-title">Dashboard</h1>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-role">
+          {{ usuarioLogado.tipo === 'admin' ? 'Administrador' : 'Colaborador' }}
+        </span>
+        <span class="user-name">{{ usuarioLogado.nome }}</span>
+        <div class="user-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <button (click)="logout()">Sair</button>
+      </div>
+      <button class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </header>
