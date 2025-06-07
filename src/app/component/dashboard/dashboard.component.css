@@ -200,12 +200,8 @@ body {
 
 /* Status Badges */
 .status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 /* Buttons */
@@ -240,32 +236,4 @@ body {
 
 .btn-reject:hover {
   background: #dc2626;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .main-content {
-    margin-left: 0;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-  }
-}
-
-@media (max-width: 768px) {
-  .content-section {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
 }
