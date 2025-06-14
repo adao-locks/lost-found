@@ -25,6 +25,7 @@ button {
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
+  transition: .4s;
 }
 
 button:hover {
@@ -34,4 +35,8 @@ button:hover {
 .error {
   color: red;
   margin-top: 10px;
+}
+
+.btn-secondary {
+  margin-top: .5rem;
 }

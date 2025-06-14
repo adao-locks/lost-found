@@ -1,0 +1,49 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+  <app-navbar></app-navbar>
+
+  <div class="content-section active">
+    <div class="section-header">
+      <h2>Histórico de Ações</h2>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>Registro de Atividades</h3>
+
+      <div class="history-timeline">
+        <div class="history-item" *ngFor="let h of historico">
+          <div
+            class="history-icon"
+            [ngClass]="{
+              cadastro: h.acao === 'Cadastro',
+              aprovacao: h.acao === 'Aprovação',
+              recusa: h.acao === 'Recusa'
+            }"
+          >
+            <i
+              class="fas"
+              [ngClass]="{
+                'fa-plus-circle': h.acao === 'Cadastro',
+                'fa-check-circle': h.acao === 'Aprovação',
+                'fa-times-circle': h.acao === 'Recusa'
+              }"
+            ></i>
+          </div>
+
+          <div class="history-content">
+            <div class="history-header">
+              <strong>{{ h.acao }}</strong>
+              <span class="history-date">
+                {{ h.data | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+            <p><b>Item:</b> {{ h.item }} </p>
+            <small>Realizado por: {{ h.usuario }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

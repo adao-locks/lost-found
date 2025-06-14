@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
 
-  usuarioLogado = { nome: '', tipo: 'colaborador' };
+  usuarioLogado = { nome: '', tipo: 'usuário' };
 
   ngOnInit(): void {
     const usuarioStr = localStorage.getItem('usuarioLogado');

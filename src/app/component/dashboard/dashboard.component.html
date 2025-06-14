@@ -1,8 +1,8 @@
 <app-sidebar></app-sidebar>
 
 <main class="main-content">
-
   <app-navbar></app-navbar>
+
 
   <section id="dashboard" class="content-section active">
     <div class="stats-grid">
@@ -45,7 +45,7 @@
           <div class="recent-item" *ngFor="let item of itensRecentes">
             <div class="item-info">
               <strong>{{ item.nome }}</strong>
-              <span>{{ item.local }} - {{ item.data }}</span>
+              <span>{{ item.local }} - {{ item.data | date: 'dd/MM/yyyy' }}</span>
             </div>
             <span class="status" [ngClass]="item.status">{{ item.status | titlecase }}</span>
           </div>

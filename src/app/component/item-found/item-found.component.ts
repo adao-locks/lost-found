@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './item-found.component.css'
 })
 export class ItemFoundComponent {
+  itensEncontrados: any[] = [];
 
+  ngOnInit(): void {
+    const itens = JSON.parse(localStorage.getItem('itens') || '[]');
+    this.itensEncontrados = itens.filter((i: any) => i.status === 'disponivel');
+  }
 }

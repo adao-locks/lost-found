@@ -1,0 +1,44 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+  <app-navbar></app-navbar>
+
+  <div class="content-section active">
+    <div class="section-header">
+      <h2>Reivindicações</h2>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>Lista de Reivindicações</h3>
+
+      <div class="pending-claims">
+        <div class="claim-item" *ngFor="let r of reivindicacoes">
+          <div class="claim-info">
+            <strong>{{ r.usuario }}</strong>
+            <span>{{ r.item }}</span>
+          </div>
+
+          <span
+            class="status"
+            [ngClass]="{
+              pending: r.status === 'pendente',
+              active: r.status === 'aprovado',
+              returned: r.status === 'recusado'
+            }"
+          >
+            {{ r.status | titlecase }}
+          </span>
+
+          <div
+            class="claim-actions"
+            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'pendente'"
+          >
+            <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
+            <button class="btn-reject" (click)="recusar(r)">Recusar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

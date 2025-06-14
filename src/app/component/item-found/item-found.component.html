@@ -1,0 +1,25 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-content">
+
+  <app-navbar></app-navbar>
+
+  <div class="content-section active">
+    <div class="section-header">
+      <h2>Itens Encontrados</h2>
+    </div>
+
+    <div class="dashboard-card">
+      <h3>Lista de Itens Encontrados</h3>
+      <div class="recent-items">
+        <div class="recent-item" *ngFor="let item of itensEncontrados">
+          <div class="item-info">
+            <strong>{{ item.nome }}</strong>
+            <span>{{ item.local }} - {{ item.data | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <span class="status available">Disponível</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

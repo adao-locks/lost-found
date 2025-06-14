@@ -19,14 +19,14 @@ export class LoginComponent {
       {
         email: 'admin@example.com',
         senha: 'admin123',
-        nome: 'João Silva',
+        nome: 'Administrador',
         tipo: 'admin'
       },
       {
         email: 'colaborador@example.com',
         senha: 'colab123',
-        nome: 'Ana Costa',
-        tipo: 'colaborador'
+        nome: 'Visitante',
+        tipo: 'usuário'
       }
     ];
 
@@ -36,10 +36,23 @@ export class LoginComponent {
 
     if (usuario) {
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('usuarioLogado', JSON.stringify(usuario)); // <-- IMPORTANTE
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
       this.router.navigate(['/dashboard']);
     } else {
       this.errorMessage = 'E-mail ou senha inválidos';
     }
+  }
+
+  loginComoColaborador() {
+    const usuario = {
+      email: 'colaborador@example.com',
+      senha: 'colab123',
+      nome: 'Visitante',
+      tipo: 'usuário'
+    };
+
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+    this.router.navigate(['/dashboard']);
   }
 }

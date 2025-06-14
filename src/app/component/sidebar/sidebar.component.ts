@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+  usuarioLogado: any;
 
+  ngOnInit(): void {
+    const usuarioStr = localStorage.getItem('usuarioLogado');
+    this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { tipo: 'visitante' };
+  }
 }

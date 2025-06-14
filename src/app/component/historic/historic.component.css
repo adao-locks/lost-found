@@ -1,0 +1,56 @@
+@import '../dashboard/dashboard.component.css';
+
+.history-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.history-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.history-icon.cadastro {
+  background: #10b981;
+}
+
+.history-icon.aprovacao {
+  background: #3b82f6;
+}
+
+.history-icon.recusa {
+  background: #ef4444;
+}
+
+.history-content {
+  flex: 1;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.history-header strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.history-date {
+  font-size: 0.875rem;
+  color: #666;
+}

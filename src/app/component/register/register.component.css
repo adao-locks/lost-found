@@ -1,7 +1,6 @@
 @import '../dashboard/dashboard.component.css';
 
 .main-content {
-  padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f9f9f9;
 }

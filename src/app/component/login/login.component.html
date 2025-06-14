@@ -16,6 +16,9 @@
       required
     />
     <button type="submit">Entrar</button>
+    <button class="btn-secondary" type="button" (click)="loginComoColaborador()">
+      Entrar como Visitante
+    </button>
   </form>
 
   <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>

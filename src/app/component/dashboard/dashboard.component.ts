@@ -74,7 +74,10 @@ export class DashboardComponent {
     reivindicacao.status = 'aprovado';
 
     const item = this.itens.find(i => i.nome === reivindicacao.item);
-    if (item) item.status = 'devolvido';
+    if (item) {
+      item.status = 'devolvido';
+      this.registrarHistorico('Aprovação', item.nome, this.usuarioLogado.nome);
+    }
 
     this.salvarAlteracoes();
   }
@@ -83,7 +86,10 @@ export class DashboardComponent {
     reivindicacao.status = 'recusado';
 
     const item = this.itens.find(i => i.nome === reivindicacao.item);
-    if (item) item.status = 'descartado';
+    if (item) {
+      item.status = 'descartado';
+      this.registrarHistorico('Recusa', item.nome, this.usuarioLogado.nome);
+    }
 
     this.salvarAlteracoes();
   }
@@ -95,5 +101,16 @@ export class DashboardComponent {
     this.calcularEstatisticas();
     this.carregarItensRecentes();
     this.carregarReivindicacoesPendentes();
+  }
+
+  registrarHistorico(acao: string, item: string, usuario: string) {
+    const historico = JSON.parse(localStorage.getItem('historico') || '[]');
+    historico.push({
+      acao,
+      item,
+      usuario,
+      data: new Date().toISOString()
+    });
+    localStorage.setItem('historico', JSON.stringify(historico));
   }
 }

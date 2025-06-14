@@ -9,6 +9,8 @@ import { RegisterComponent } from './component/register/register.component';
 import { ItemFoundComponent } from './component/item-found/item-found.component';
 import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
+import { ClaimsComponent } from './component/claims/claims.component';
+import { HistoricComponent } from './component/historic/historic.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { NavbarComponent } from './component/navbar/navbar.component';
     RegisterComponent,
     ItemFoundComponent,
     SidebarComponent,
-    NavbarComponent
+    NavbarComponent,
+    ClaimsComponent,
+    HistoricComponent
   ],
   imports: [
     BrowserModule,
