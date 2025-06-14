@@ -21,7 +21,7 @@ interface Reivindicacao {
     standalone: false
 })
 export class DashboardComponent {
-  usuarioLogado = { nome: '', tipo: 'colaborador' };
+  usuarioLogado = { nome: '', tipo: 'usuário' };
   itens: Item[] = [];
   itensRecentes: Item[] = [];
   reivindicacoes: Reivindicacao[] = [];

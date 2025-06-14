@@ -11,6 +11,6 @@ export class SidebarComponent {
 
   ngOnInit(): void {
     const usuarioStr = localStorage.getItem('usuarioLogado');
-    this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { tipo: 'visitante' };
+    this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { tipo: 'usuário' };
   }
 }
