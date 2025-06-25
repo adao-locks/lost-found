@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { finalize } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
@@ -19,7 +18,6 @@ export class RegisterComponent {
   data = '';
   descricao: string = '';
   fotoSelecionada: File | null = null;
-  urlFoto: string = '';
   status: 'disponivel' | 'devolvido' | 'descartado' = 'disponivel';
   usuarioLogado: any;
 
@@ -29,8 +27,7 @@ export class RegisterComponent {
       local: this.local,
       data: this.data,
       status: this.status,
-      descricao: this.descricao,
-      fotoUrl: this.urlFoto
+      descricao: this.descricao
     };
 
     const itens = JSON.parse(localStorage.getItem('itens') || '[]');
@@ -88,25 +85,4 @@ export class RegisterComponent {
     });
     localStorage.setItem('historico', JSON.stringify(historico));
   }
-
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.fotoSelecionada = file;
-
-      const filePath = `imagens/${new Date().getTime()}_${file.name}`;
-      const fileRef = this.storage.ref(filePath);
-      const task = this.storage.upload(filePath, file);
-
-      task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe((url) => {
-            this.urlFoto = url;
-            console.log('URL da imagem:', url);
-          });
-        })
-      ).subscribe();
-    }
-  }
-
 }
