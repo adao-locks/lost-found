@@ -13,31 +13,37 @@
       <h3>Lista de Reivindicações</h3>
 
       <div class="pending-claims">
-        <div class="claim-item" *ngFor="let r of reivindicacoes">
-          <div class="claim-info">
-            <strong>{{ r.usuario }}</strong>
-            <span>{{ r.item }}</span>
-          </div>
+        <ng-container *ngFor="let r of reivindicacoes">
+          <div class="claim-item" *ngFor="let i of itens">
+            <div class="claim-info">
+              <strong>{{ r.item }}</strong>
+              <span>{{ r.usuario }}</span>
+              <span>{{ i.local }}</span>
+              <span>{{ i.descricao }}</span>
 
-          <span
-            class="status"
-            [ngClass]="{
-              pending: r.status === 'pendente',
-              active: r.status === 'aprovado',
-              returned: r.status === 'recusado'
-            }"
-          >
-            {{ r.status | titlecase }}
-          </span>
+              <img *ngIf="r.fotoUrl" [src]="r.fotoUrl" alt="Foto do item" class="item-img"/>
+            </div>
 
-          <div
-            class="claim-actions"
-            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'pendente'"
-          >
-            <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
-            <button class="btn-reject" (click)="recusar(r)">Recusar</button>
+            <span
+              class="status"
+              [ngClass]="{
+                pending: r.status === 'pendente',
+                active: r.status === 'aprovado',
+                returned: r.status === 'recusado'
+              }"
+            >
+              {{ r.status | titlecase }}
+            </span>
+
+            <div
+              class="claim-actions"
+              *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'pendente'"
+            >
+              <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
+              <button class="btn-reject" (click)="recusar(r)">Recusar</button>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>

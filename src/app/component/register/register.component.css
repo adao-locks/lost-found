@@ -154,3 +154,7 @@
   background-color: #f8d7da;
   color: #c0392b;
 }
+
+#descricao {
+  resize: none;
+}

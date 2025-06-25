@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { finalize } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
   selector: 'app-register',
@@ -7,9 +9,17 @@ import { Component } from '@angular/core';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+
+  constructor(
+    private storage: AngularFireStorage
+  ) { }
+
   nome = '';
   local = '';
   data = '';
+  descricao: string = '';
+  fotoSelecionada: File | null = null;
+  urlFoto: string = '';
   status: 'disponivel' | 'devolvido' | 'descartado' = 'disponivel';
   usuarioLogado: any;
 
@@ -18,7 +28,9 @@ export class RegisterComponent {
       nome: this.nome,
       local: this.local,
       data: this.data,
-      status: this.status
+      status: this.status,
+      descricao: this.descricao,
+      fotoUrl: this.urlFoto
     };
 
     const itens = JSON.parse(localStorage.getItem('itens') || '[]');
@@ -76,4 +88,25 @@ export class RegisterComponent {
     });
     localStorage.setItem('historico', JSON.stringify(historico));
   }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.fotoSelecionada = file;
+
+      const filePath = `imagens/${new Date().getTime()}_${file.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
+
+      task.snapshotChanges().pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            this.urlFoto = url;
+            console.log('URL da imagem:', url);
+          });
+        })
+      ).subscribe();
+    }
+  }
+
 }

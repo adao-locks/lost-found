@@ -11,6 +11,9 @@ import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
 import { ClaimsComponent } from './component/claims/claims.component';
 import { HistoricComponent } from './component/historic/historic.component';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from '../enviroments/enviroment';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,9 @@ import { HistoricComponent } from './component/historic/historic.component';
   imports: [
     BrowserModule,
     FormsModule,
+    AngularFireStorageModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireStorageModule,
     AppRoutingModule
   ],
   providers: [],
