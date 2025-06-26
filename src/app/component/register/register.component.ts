@@ -27,6 +27,7 @@ export class RegisterComponent {
     const itens = JSON.parse(localStorage.getItem('itens') || '[]');
     itens.push(novoItem);
     localStorage.setItem('itens', JSON.stringify(itens));
+    console.log(itens);
 
     if (this.status === 'disponivel') {
       const reivs = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
@@ -50,6 +51,7 @@ export class RegisterComponent {
     this.local = '';
     this.data = new Date().toISOString().split('T')[0];
     this.status = 'disponivel';
+    this.descricao = '';
   }
 
   itensRecentes: any[] = [];

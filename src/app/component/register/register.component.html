@@ -77,6 +77,7 @@
             <div class="item-info">
               <strong>{{ item.nome }}</strong>
               <span>{{ item.local }} - {{ item.data }}</span>
+              <span>{{ item.descricao }}</span>
             </div>
             <span class="status" [ngClass]="item.status">{{ item.status | titlecase }}</span>
           </div>

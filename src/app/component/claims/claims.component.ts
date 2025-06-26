@@ -9,14 +9,23 @@ import { Component, OnInit } from '@angular/core';
 export class ClaimsComponent implements OnInit {
   usuarioLogado: any;
   reivindicacoes: any[] = [];
+  reivindicacoesComItem: any[] = [];
   itens: any[] = [];
 
   ngOnInit(): void {
     const usuarioStr = localStorage.getItem('usuarioLogado');
     this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { nome: 'Desconhecido' };
 
-    this.reivindicacoes = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
-    this.itens = JSON.parse(localStorage.getItem('itens') || '[]');
+    const reivindicacoes = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
+    const itens = JSON.parse(localStorage.getItem('itens') || '[]');
+
+    this.reivindicacoesComItem = reivindicacoes.map((r: any) => {
+      const itemRelacionado = itens.find((i: any) => i.id === r.id_item);
+      return {
+        ...r,
+        item: itemRelacionado
+      };
+    });
   }
 
   aprovar(reivindicacao: any) {
