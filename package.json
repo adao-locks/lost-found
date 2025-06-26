@@ -14814,5 +14814,8 @@
   },
   "dependencies": {
     "@angular/core": "^20.0.5"
+  },
+  "devDependencies": {
+    "@angular/cli": "^20.0.4"
   }
 }
