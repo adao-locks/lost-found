@@ -18,9 +18,9 @@ export class NavbarComponent {
     }
   }
 
+  //localStorage.clear(); limpa o localStorage
   logout() {
-      localStorage.clear();
-      window.location.href = '/';
+    window.location.href = '/';
   }
 }
 

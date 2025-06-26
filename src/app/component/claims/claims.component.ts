@@ -12,6 +12,10 @@ export class ClaimsComponent implements OnInit {
   reivindicacoesComItem: any[] = [];
   itens: any[] = [];
 
+  trackByReivindicacao(index: number, r: any): any {
+    return r.id; // ou outro campo único que cada reivindicação tenha
+  }
+
   ngOnInit(): void {
     const usuarioStr = localStorage.getItem('usuarioLogado');
     this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { nome: 'Desconhecido' };
@@ -20,7 +24,8 @@ export class ClaimsComponent implements OnInit {
     const itens = JSON.parse(localStorage.getItem('itens') || '[]');
 
     this.reivindicacoesComItem = reivindicacoes.map((r: any) => {
-      const itemRelacionado = itens.find((i: any) => i.id === r.id_item);
+      console.log('Reivindicação:', r);
+      const itemRelacionado = itens.find((i: any) => i.nome === r.item);
       return {
         ...r,
         item: itemRelacionado

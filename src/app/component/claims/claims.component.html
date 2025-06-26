@@ -6,17 +6,16 @@
 
   <div class="content-section active">
     <div class="section-header">
-      <h2>Reivindicações</h2>
     </div>
 
     <div class="dashboard-card">
       <h3>Lista de Reivindicações</h3>
 
       <div class="pending-claims">
-        <div *ngFor="let r of reivindicacoesComItem">
+        <div *ngFor="let r of reivindicacoesComItem; trackBy: trackByReivindicacao">
           <div class="claim-item">
             <div class="claim-info">
-              <strong>{{ r.item?.nome }}</strong>
+              <strong>{{ r.id }} - {{ r.item?.nome }}</strong>
               <span>{{ r.usuario }}</span>
             </div>
 
@@ -34,20 +33,6 @@
             *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'pendente'">
               <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
               <button class="btn-reject" (click)="recusar(r)">Recusar</button>
-            </div>
-
-            <div
-            class="claim-actions"
-            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'aprovado'" style="width: 9rem;" >
-              <button hidden class="btn-approve" (click)="aprovar(r)">Aprovar</button>
-              <button hidden class="btn-reject" (click)="recusar(r)">Recusar</button>
-            </div>
-
-            <div
-            class="claim-actions"
-            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'recusado'" style="width: 9rem;" >
-              <button hidden class="btn-approve" (click)="aprovar(r)">Aprovar</button>
-              <button hidden class="btn-reject" (click)="recusar(r)">Recusar</button>
             </div>
 
             <div class="status">
