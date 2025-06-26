@@ -12,7 +12,6 @@ export class RegisterComponent {
   local = '';
   data = '';
   descricao: string = '';
-  fotoSelecionada: File | null = null;
   status: 'disponivel' | 'devolvido' | 'descartado' = 'disponivel';
   usuarioLogado: any;
 
