@@ -1,5 +1,4 @@
-import { Component, Inject } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-register',
@@ -8,10 +7,6 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-
-  constructor(
-    private storage: AngularFireStorage
-  ) { }
 
   nome = '';
   local = '';
