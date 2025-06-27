@@ -17,47 +17,55 @@ export class ClaimsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const usuarioStr = localStorage.getItem('usuarioLogado');
-    this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { nome: 'Desconhecido' };
+    this.usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
+    this.reivindicacoes = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
+    this.itens = JSON.parse(localStorage.getItem('itens') || '[]');
 
-    const reivindicacoes = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
-    const itens = JSON.parse(localStorage.getItem('itens') || '[]');
-
-    this.reivindicacoesComItem = reivindicacoes.map((r: any) => {
-      console.log('Reivindicação:', r);
-      const itemRelacionado = itens.find((i: any) => i.nome === r.item);
-      return {
-        ...r,
-        item: itemRelacionado
-      };
-    });
+    this.montarReivindicacoesComItem();
   }
 
-  aprovar(reivindicacao: any) {
-    reivindicacao.status = 'aprovado';
-    const item = this.itens.find((i) => i.nome === reivindicacao.item);
-    if (item) {
-      item.status = 'devolvido';
-      this.registrarHistorico('Aprovação', reivindicacao.item, this.usuarioLogado.nome);
+  aprovar(r: any) {
+    r.status = 'aprovado';
+    if (r.itemDetalhado) {
+      r.itemDetalhado.status = 'devolvido';
+      this.registrarHistorico('Aprovação', r.itemDetalhado.nome, this.usuarioLogado.nome);
     }
-
-    this.salvar();
+    this.persistirDados();
+    this.montarReivindicacoesComItem();
   }
 
-  recusar(reivindicacao: any) {
-    reivindicacao.status = 'recusado';
-    const item = this.itens.find((i) => i.nome === reivindicacao.item);
-    if (item) {
-      item.status = 'descartado';
-      this.registrarHistorico('Recusa', reivindicacao.item, this.usuarioLogado.nome);
+  recusar(r: any) {
+    r.status = 'recusado';
+    if (r.itemDetalhado) {
+      r.itemDetalhado.status = 'descartado';
+      this.registrarHistorico('Recusa', r.itemDetalhado.nome, this.usuarioLogado.nome);
     }
-
-    this.salvar();
+    this.persistirDados();
+    this.montarReivindicacoesComItem();
   }
 
-  salvar() {
+  persistirDados() {
+    // Atualiza reivindicacoes baseadas em reivindicacoesComItem
+    this.reivindicacoes = this.reivindicacoesComItem.map(r => ({
+      usuario: r.usuario,
+      item: r.itemDetalhado ? r.itemDetalhado.nome : r.item,
+      descricao: r.itemDetalhado?.descricao,
+      status: r.status,
+      data: r.data,
+      id: r.id,
+      local: r.itemDetalhado ? r.itemDetalhado.local : '',
+    }));
+
     localStorage.setItem('reivindicacoes', JSON.stringify(this.reivindicacoes));
     localStorage.setItem('itens', JSON.stringify(this.itens));
+  }
+
+  montarReivindicacoesComItem() {
+    this.reivindicacoesComItem = this.reivindicacoes.map((r, idx) => {
+      const nomeItem = typeof r.item === 'string' ? r.item : r.item?.nome;
+      const item = this.itens.find(i => i.nome === nomeItem);
+      return { ...r, item, id: idx + 1 };
+    });
   }
 
   registrarHistorico(acao: string, item: string, usuario: string) {

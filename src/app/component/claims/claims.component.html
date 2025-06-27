@@ -15,17 +15,17 @@
         <div *ngFor="let r of reivindicacoesComItem; trackBy: trackByReivindicacao">
           <div class="claim-item">
             <div class="claim-info">
-              <strong>{{ r.id }} - {{ r.item?.nome }}</strong>
+              <strong>{{ r.id }} - {{ r.item.nome }}</strong>
               <span>{{ r.usuario }}</span>
             </div>
 
             <div class="claim-info">
-              <span><b>Local:</b> {{ r.item?.local }}</span>
-              <span><b>Descrição:</b> {{ r.item?.descricao }}</span>
+              <span><b>Local:</b> {{ r.item.local }}</span>
+              <span><b>Descrição:</b> {{ r.item.descricao }}</span>
             </div>
 
             <div class="claim-info">
-              <span>{{ r.item?.data | date: 'dd/MM/yyyy' }}</span>
+              <span>{{ r.item.data | date: 'dd/MM/yyyy' }}</span>
             </div>
 
             <div

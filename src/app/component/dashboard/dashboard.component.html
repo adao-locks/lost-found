@@ -57,8 +57,8 @@
         <div class="pending-claims">
         <div class="claim-item" *ngFor="let r of reivindicacoesPendentes">
           <div class="claim-info">
-            <strong>{{ r.usuario }}</strong>
-            <span>{{ r.item }}</span>
+            <strong>{{ r.item }}</strong>
+            <span>{{ r.usuario }}</span>
           </div>
           <div class="claim-actions" *ngIf="usuarioLogado.tipo === 'admin'">
             <button class="btn-approve" (click)="aprovarReivindicacao(r)">Aprovar</button>
