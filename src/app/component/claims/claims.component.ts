@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Firestore, collection, collectionData, doc, updateDoc, getDocs, setDoc } from '@angular/fire/firestore';
+import { inject } from '@angular/core';
+import { docData } from 'rxfire/firestore';
 
 @Component({
   selector: 'app-claims',
@@ -7,19 +10,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './claims.component.css'
 })
 export class ClaimsComponent implements OnInit {
+  private firestore: Firestore = inject(Firestore);
   usuarioLogado: any;
   reivindicacoes: any[] = [];
   reivindicacoesComItem: any[] = [];
   itens: any[] = [];
 
   trackByReivindicacao(index: number, r: any): any {
-    return r.id; // ou outro campo único que cada reivindicação tenha
+    return r.id;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
-    this.reivindicacoes = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
-    this.itens = JSON.parse(localStorage.getItem('itens') || '[]');
+
+    const reivindicacoesSnapshot = await getDocs(collection(this.firestore, 'reivindicacoes'));
+    const itensSnapshot = await getDocs(collection(this.firestore, 'itens'));
+
+    this.reivindicacoes = reivindicacoesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.itens = itensSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     this.montarReivindicacoesComItem();
   }
@@ -45,19 +53,26 @@ export class ClaimsComponent implements OnInit {
   }
 
   persistirDados() {
-    // Atualiza reivindicacoes baseadas em reivindicacoesComItem
-    this.reivindicacoes = this.reivindicacoesComItem.map(r => ({
-      usuario: r.usuario,
-      item: r.itemDetalhado ? r.itemDetalhado.nome : r.item,
-      descricao: r.itemDetalhado?.descricao,
-      status: r.status,
-      data: r.data,
-      id: r.id,
-      local: r.itemDetalhado ? r.itemDetalhado.local : '',
-    }));
+    const reivindicacoesRef = collection(this.firestore, 'reivindicacoes');
+    const itensRef = collection(this.firestore, 'itens');
 
-    localStorage.setItem('reivindicacoes', JSON.stringify(this.reivindicacoes));
-    localStorage.setItem('itens', JSON.stringify(this.itens));
+    this.itens.forEach(item => {
+      const itemRef = doc(this.firestore, `itens/${item.id}`);
+      setDoc(itemRef, item);
+    });
+
+    this.reivindicacoesComItem.forEach(r => {
+      const reivindicacaoRef = doc(this.firestore, `reivindicacoes/${r.id}`);
+      const novaReivindicacao = {
+        usuario: r.usuario,
+        item: r.itemDetalhado ? r.itemDetalhado.nome : r.item,
+        descricao: r.itemDetalhado?.descricao,
+        status: r.status,
+        data: r.data,
+        local: r.itemDetalhado ? r.itemDetalhado.local : '',
+      };
+      setDoc(reivindicacaoRef, novaReivindicacao);
+    });
   }
 
   montarReivindicacoesComItem() {
@@ -69,14 +84,14 @@ export class ClaimsComponent implements OnInit {
   }
 
   registrarHistorico(acao: string, item: string, usuario: string) {
-    const historico = JSON.parse(localStorage.getItem('historico') || '[]');
-    historico.push({
+    const historicoRef = collection(this.firestore, 'historico');
+    setDoc(doc(historicoRef), {
       acao,
       item,
       usuario,
       data: new Date().toISOString()
     });
-    localStorage.setItem('historico', JSON.stringify(historico));
   }
+
 }
 

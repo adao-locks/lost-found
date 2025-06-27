@@ -1,58 +1,46 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { inject } from '@angular/core';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css',
-    standalone: false
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
+  standalone: false
 })
 export class LoginComponent {
   email = '';
   password = '';
   errorMessage = '';
 
+  private auth: Auth = inject(Auth);
+
   constructor(private router: Router) {}
 
-  onLogin() {
-    const usuarios = [
-      {
-        email: 'admin@example.com',
-        senha: 'admin123',
-        nome: 'Administrador',
-        tipo: 'admin'
-      },
-      {
-        email: 'colaborador@example.com',
-        senha: 'colab123',
-        nome: 'Visitante',
-        tipo: 'usuário'
-      }
-    ];
+  async onLogin() {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, this.email, this.password);
+      const user = userCredential.user;
 
-    const usuario = usuarios.find(
-      u => u.email === this.email && u.senha === this.password
-    );
+      // Se quiser armazenar dados adicionais, crie lógica para buscá-los do Firestore
+      const usuario = {
+        email: user.email,
+        nome: user.displayName || user.email,
+        tipo: user.email === 'admin@example.com' ? 'admin' : 'usuário'
+      };
 
-    if (usuario) {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
       this.router.navigate(['/dashboard']);
-    } else {
+    } catch (error) {
       this.errorMessage = 'E-mail ou senha inválidos';
     }
   }
 
-  loginComoColaborador() {
-    const usuario = {
-      email: 'colaborador@example.com',
-      senha: 'colab123',
-      nome: 'Visitante',
-      tipo: 'usuário'
-    };
-
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-    this.router.navigate(['/dashboard']);
+  async loginComoColaborador() {
+    this.email = 'colaborador@example.com';
+    this.password = 'colab123';
+    await this.onLogin();
   }
 }

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-item-found',
@@ -8,9 +10,11 @@ import { Component } from '@angular/core';
 })
 export class ItemFoundComponent {
   itensEncontrados: any[] = [];
+  private firestore: Firestore = inject(Firestore);
 
-  ngOnInit(): void {
-    const itens = JSON.parse(localStorage.getItem('itens') || '[]');
-    this.itensEncontrados = itens.filter((i: any) => i.status === 'disponivel');
+  async ngOnInit(): Promise<void> {
+    const snapshot = await getDocs(collection(this.firestore, 'itens'));
+    const todosItens = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.itensEncontrados = todosItens.filter((i: any) => i.status === 'disponivel');
   }
 }

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-historic',
@@ -8,14 +10,16 @@ import { Component } from '@angular/core';
 })
 export class HistoricComponent {
   historico: any[] = [];
+  private firestore: Firestore = inject(Firestore);
 
-  ngOnInit(): void {
-    this.carregarHistorico();
+  async ngOnInit(): Promise<void> {
+    await this.carregarHistorico();
   }
 
-  carregarHistorico() {
-    const data = localStorage.getItem('historico');
-    this.historico = data ? JSON.parse(data) : [];
+  async carregarHistorico() {
+    const historicoSnapshot = await getDocs(collection(this.firestore, 'historico'));
+    this.historico = historicoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
     this.historico.sort(
       (a: any, b: any) => new Date(b.data).getTime() - new Date(a.data).getTime()
     );
