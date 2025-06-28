@@ -24,4 +24,5 @@ export class HistoricComponent {
       (a: any, b: any) => new Date(b.data).getTime() - new Date(a.data).getTime()
     );
   }
+
 }

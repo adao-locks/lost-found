@@ -16,7 +16,11 @@
             <strong>{{ item.nome }}</strong>
             <span>{{ item.local }} - {{ item.data | date: 'dd/MM/yyyy' }}</span>
           </div>
-          <span class="status available">Disponível</span>
+          <span class="status" [ngClass]="{
+                  'pendente': item.status === 'disponivel',
+                  'aprovado': item.status === 'devolvido',
+                  'recusado': item.status === 'descartado'
+                }">{{ item.status }}</span>
         </div>
       </div>
     </div>

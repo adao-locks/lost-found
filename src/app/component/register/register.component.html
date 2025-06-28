@@ -84,7 +84,11 @@
               <span>{{ item.local }} - {{ item.data }}</span>
               <span>{{ item.descricao }}</span>
             </div>
-            <span class="status" [ngClass]="item.status">{{ item.status | titlecase }}</span>
+            <span class="status" [ngClass]="{
+                  'pendente': item.status === 'disponivel',
+                  'aprovado': item.status === 'devolvido',
+                  'recusado': item.status === 'descartado'
+                }">{{ item.status | titlecase }}</span>
           </div>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, collectionData, doc, updateDoc, getDocs, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, setDoc, addDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
-import { docData } from 'rxfire/firestore';
 
 @Component({
   selector: 'app-claims',
@@ -33,23 +32,25 @@ export class ClaimsComponent implements OnInit {
   }
 
   aprovar(r: any) {
-    r.status = 'aprovado';
-    if (r.itemDetalhado) {
-      r.itemDetalhado.status = 'devolvido';
-      this.registrarHistorico('Aprovação', r.itemDetalhado.nome, this.usuarioLogado.nome);
-    }
+    if (!r.item) return;
+
+    r.item.status = 'devolvido';
+    this.registrarHistorico('Aprovado', r.item.nome, this.usuarioLogado.nome);
+    console.log('Historico registrado!');
     this.persistirDados();
     this.montarReivindicacoesComItem();
+    console.log('Processo finalizado!');
   }
 
   recusar(r: any) {
-    r.status = 'recusado';
-    if (r.itemDetalhado) {
-      r.itemDetalhado.status = 'descartado';
-      this.registrarHistorico('Recusa', r.itemDetalhado.nome, this.usuarioLogado.nome);
-    }
+    if (!r.item) return;
+
+    r.item.status = 'descartado';
+    this.registrarHistorico('Recusado', r.item.nome, this.usuarioLogado.nome);
+    console.log('Historico registrado!');
     this.persistirDados();
     this.montarReivindicacoesComItem();
+    console.log('Processo finalizado!');
   }
 
   persistirDados() {
@@ -63,13 +64,14 @@ export class ClaimsComponent implements OnInit {
 
     this.reivindicacoesComItem.forEach(r => {
       const reivindicacaoRef = doc(this.firestore, `reivindicacoes/${r.id}`);
+      const { nome, descricao, status, local } = r.item || {};
       const novaReivindicacao = {
         usuario: r.usuario,
-        item: r.itemDetalhado ? r.itemDetalhado.nome : r.item,
-        descricao: r.itemDetalhado?.descricao,
-        status: r.status,
+        item: nome,
+        descricao,
+        status,
         data: r.data,
-        local: r.itemDetalhado ? r.itemDetalhado.local : '',
+        local: local || '',
       };
       setDoc(reivindicacaoRef, novaReivindicacao);
     });
@@ -79,13 +81,13 @@ export class ClaimsComponent implements OnInit {
     this.reivindicacoesComItem = this.reivindicacoes.map((r, idx) => {
       const nomeItem = typeof r.item === 'string' ? r.item : r.item?.nome;
       const item = this.itens.find(i => i.nome === nomeItem);
-      return { ...r, item, id: idx + 1 };
+      return { ...r, item, indice: idx + 1 };
     });
   }
 
-  registrarHistorico(acao: string, item: string, usuario: string) {
+  async registrarHistorico(acao: string, item: string, usuario: string) {
     const historicoRef = collection(this.firestore, 'historico');
-    setDoc(doc(historicoRef), {
+    await addDoc(historicoRef, {
       acao,
       item,
       usuario,

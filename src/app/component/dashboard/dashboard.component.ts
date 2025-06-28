@@ -15,7 +15,7 @@ interface Reivindicacao {
   id?: string;
   usuario: string;
   item: string;
-  status: 'pendente' | 'aprovado' | 'recusado';
+  status: 'disponivel' | 'aprovado' | 'recusado';
 }
 
 @Component({
@@ -65,14 +65,14 @@ export class DashboardComponent {
   }
 
   carregarReivindicacoesPendentes() {
-    this.reivindicacoesPendentes = this.reivindicacoes.filter(r => r.status === 'pendente');
+    this.reivindicacoesPendentes = this.reivindicacoes.filter(r => r.status === 'disponivel');
   }
 
   calcularEstatisticas() {
     this.stats.total = this.itens.length;
     this.stats.disponiveis = this.itens.filter(i => i.status === 'disponivel').length;
     this.stats.devolvidos = this.itens.filter(i => i.status === 'devolvido').length;
-    this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'pendente').length;
+    this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'disponivel').length;
   }
 
   aprovarReivindicacao(reivindicacao: any) {

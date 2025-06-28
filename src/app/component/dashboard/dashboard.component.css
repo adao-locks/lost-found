@@ -129,19 +129,24 @@
 }
 .status {
   font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
   text-align: center;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  background-color: #e0e0e0;
   color: #333;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 .claim-actions {
   display: flex;
   gap: 0.5rem;
 }
-.status {
-  font-weight: 400;
-  text-transform: uppercase;
+.pendente {
+  background-color: #f0ad4e;
+}
+.aprovado {
+  background-color: #5cb85c;
+}
+.recusado {
+  background-color: #d9534f;
 }

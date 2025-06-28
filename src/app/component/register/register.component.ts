@@ -64,7 +64,7 @@ export class RegisterComponent {
       await addDoc(reivsRef, {
         usuario: this.usuarioLogado?.nome || 'Usuário',
         item: this.nome,
-        status: 'pendente',
+        status: 'disponivel',
         data: this.data
       });
     }

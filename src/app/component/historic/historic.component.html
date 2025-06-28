@@ -17,16 +17,16 @@
             class="history-icon"
             [ngClass]="{
               cadastro: h.acao === 'Cadastro',
-              aprovacao: h.acao === 'Aprovação',
-              recusa: h.acao === 'Recusa'
+              aprovacao: h.acao === 'Aprovado',
+              recusa: h.acao === 'Recusado'
             }"
           >
             <i
               class="fas"
               [ngClass]="{
                 'fa-plus-circle': h.acao === 'Cadastro',
-                'fa-check-circle': h.acao === 'Aprovação',
-                'fa-times-circle': h.acao === 'Recusa'
+                'fa-check-circle': h.acao === 'Aprovado',
+                'fa-times-circle': h.acao === 'Recusado'
               }"
             ></i>
           </div>

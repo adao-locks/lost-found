@@ -15,6 +15,6 @@ export class ItemFoundComponent {
   async ngOnInit(): Promise<void> {
     const snapshot = await getDocs(collection(this.firestore, 'itens'));
     const todosItens = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    this.itensEncontrados = todosItens.filter((i: any) => i.status === 'disponivel');
+    this.itensEncontrados = todosItens.filter((i: any) => i.status !== 'disponivel');
   }
 }
