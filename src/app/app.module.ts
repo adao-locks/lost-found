@@ -11,6 +11,11 @@ import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
 import { ClaimsComponent } from './component/claims/claims.component';
 import { HistoricComponent } from './component/historic/historic.component';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -29,7 +34,12 @@ import { HistoricComponent } from './component/historic/historic.component';
     FormsModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
+    provideAuth(() => getAuth())
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

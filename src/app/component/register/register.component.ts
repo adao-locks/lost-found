@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { Firestore, collection, addDoc, getDocs } from '@angular/fire/firestore';
+import { inject } from '@angular/core';
+import { Storage } from '@angular/fire/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 @Component({
   selector: 'app-register',
@@ -7,43 +11,87 @@ import { Component } from '@angular/core';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-
+  private storage: Storage = inject(Storage);
+  imagemURL: string | null = null;
+  fileInput!: HTMLInputElement;
   nome = '';
   local = '';
   data = '';
   descricao: string = '';
   status: 'disponivel' | 'devolvido' | 'descartado' = 'disponivel';
   usuarioLogado: any;
+  itensRecentes: any[] = [];
 
-  onSubmit() {
+  private firestore: Firestore = inject(Firestore);
+
+  async ngOnInit(): Promise<void> {
+    const hoje = new Date();
+    this.data = hoje.toISOString().split('T')[0];
+
+    const usuarioStr = localStorage.getItem('usuarioLogado');
+    this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { nome: 'Desconhecido' };
+
+    await this.carregarItensRecentes();
+  }
+
+  async onSubmit() {
+    this.status = 'disponivel';
+    let imagemURL = null;
+
+    if (this.fileInput && this.fileInput.files?.length) {
+      const arquivo = this.fileInput.files[0];
+      const imgRef = ref(this.storage, `imagens/${Date.now()}_${arquivo.name}`);
+
+      const uploadResult = await uploadBytes(imgRef, arquivo);
+      imagemURL = await getDownloadURL(uploadResult.ref);
+    }
+
     const novoItem = {
       nome: this.nome,
       local: this.local,
       data: this.data,
       status: this.status,
-      descricao: this.descricao
+      descricao: this.descricao,
+      imagemURL
     };
 
-    const itens = JSON.parse(localStorage.getItem('itens') || '[]');
-    itens.push(novoItem);
-    localStorage.setItem('itens', JSON.stringify(itens));
-    console.log(itens);
+    const itensRef = collection(this.firestore, 'itens');
+    await addDoc(itensRef, novoItem);
 
+    // Se for disponível, adiciona reivindicação
     if (this.status === 'disponivel') {
-      const reivs = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
-      reivs.push({
+      const reivsRef = collection(this.firestore, 'reivindicacoes');
+      await addDoc(reivsRef, {
         usuario: this.usuarioLogado?.nome || 'Usuário',
         item: this.nome,
-        status: 'pendente'
+        status: 'disponivel',
+        data: this.data
       });
-      localStorage.setItem('reivindicacoes', JSON.stringify(reivs));
     }
 
-    this.registrarHistorico('Cadastro', this.nome, this.usuarioLogado.nome);
+    // Registrar no histórico
+    await this.registrarHistorico('Cadastro', this.nome, this.usuarioLogado.nome);
 
     this.resetForm();
     alert('Item registrado com sucesso!');
-    this.carregarItensRecentes();
+    await this.carregarItensRecentes();
+  }
+
+  setFileInput(element: HTMLInputElement) {
+    this.fileInput = element;
+  }
+
+  async uploadImagem(event: any) {
+    const arquivo: File = event.target.files[0];
+    if (!arquivo) return;
+
+    const imgRef = ref(this.storage, `imagens/${arquivo.name}`);
+
+    // Faz upload do arquivo
+    await uploadBytes(imgRef, arquivo);
+
+    // Pega a URL pública para exibir ou salvar no banco
+    this.imagemURL = await getDownloadURL(imgRef);
   }
 
   resetForm() {
@@ -52,33 +100,24 @@ export class RegisterComponent {
     this.data = new Date().toISOString().split('T')[0];
     this.status = 'disponivel';
     this.descricao = '';
+    this.imagemURL = null;
   }
 
-  itensRecentes: any[] = [];
-
-  ngOnInit(): void {
-    const hoje = new Date();
-    this.data = hoje.toISOString().split('T')[0];
-    const usuarioStr = localStorage.getItem('usuarioLogado');
-    this.usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : { nome: 'Desconhecido' };
-    this.carregarItensRecentes();
-  }
-
-  carregarItensRecentes() {
-    const itens = JSON.parse(localStorage.getItem('itens') || '[]');
+  async carregarItensRecentes() {
+    const snapshot = await getDocs(collection(this.firestore, 'itens'));
+    const itens = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     this.itensRecentes = itens
       .sort((a: any, b: any) => new Date(b.data).getTime() - new Date(a.data).getTime())
       .slice(0, 4);
   }
 
-  registrarHistorico(acao: string, item: string, usuario: string) {
-    const historico = JSON.parse(localStorage.getItem('historico') || '[]');
-    historico.push({
+  async registrarHistorico(acao: string, item: string, usuario: string) {
+    const historicoRef = collection(this.firestore, 'historico');
+    await addDoc(historicoRef, {
       acao,
       item,
       usuario,
       data: new Date().toISOString()
     });
-    localStorage.setItem('historico', JSON.stringify(historico));
   }
 }

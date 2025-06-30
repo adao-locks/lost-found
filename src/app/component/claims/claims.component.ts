@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Firestore, collection, doc, getDocs, setDoc, addDoc } from '@angular/fire/firestore';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-claims',
@@ -7,76 +9,91 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './claims.component.css'
 })
 export class ClaimsComponent implements OnInit {
+  private firestore: Firestore = inject(Firestore);
   usuarioLogado: any;
   reivindicacoes: any[] = [];
   reivindicacoesComItem: any[] = [];
   itens: any[] = [];
 
   trackByReivindicacao(index: number, r: any): any {
-    return r.id; // ou outro campo único que cada reivindicação tenha
+    return r.id;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
-    this.reivindicacoes = JSON.parse(localStorage.getItem('reivindicacoes') || '[]');
-    this.itens = JSON.parse(localStorage.getItem('itens') || '[]');
+
+    const reivindicacoesSnapshot = await getDocs(collection(this.firestore, 'reivindicacoes'));
+    const itensSnapshot = await getDocs(collection(this.firestore, 'itens'));
+
+    this.reivindicacoes = reivindicacoesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.itens = itensSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     this.montarReivindicacoesComItem();
   }
 
   aprovar(r: any) {
-    r.status = 'aprovado';
-    if (r.itemDetalhado) {
-      r.itemDetalhado.status = 'devolvido';
-      this.registrarHistorico('Aprovação', r.itemDetalhado.nome, this.usuarioLogado.nome);
-    }
+    if (!r.item) return;
+
+    r.item.status = 'devolvido';
+    this.registrarHistorico('Aprovado', r.item.nome, this.usuarioLogado.nome);
+    console.log('Historico registrado!');
     this.persistirDados();
     this.montarReivindicacoesComItem();
+    console.log('Processo finalizado!');
   }
 
   recusar(r: any) {
-    r.status = 'recusado';
-    if (r.itemDetalhado) {
-      r.itemDetalhado.status = 'descartado';
-      this.registrarHistorico('Recusa', r.itemDetalhado.nome, this.usuarioLogado.nome);
-    }
+    if (!r.item) return;
+
+    r.item.status = 'descartado';
+    this.registrarHistorico('Recusado', r.item.nome, this.usuarioLogado.nome);
+    console.log('Historico registrado!');
     this.persistirDados();
     this.montarReivindicacoesComItem();
+    console.log('Processo finalizado!');
   }
 
   persistirDados() {
-    // Atualiza reivindicacoes baseadas em reivindicacoesComItem
-    this.reivindicacoes = this.reivindicacoesComItem.map(r => ({
-      usuario: r.usuario,
-      item: r.itemDetalhado ? r.itemDetalhado.nome : r.item,
-      descricao: r.itemDetalhado?.descricao,
-      status: r.status,
-      data: r.data,
-      id: r.id,
-      local: r.itemDetalhado ? r.itemDetalhado.local : '',
-    }));
+    const reivindicacoesRef = collection(this.firestore, 'reivindicacoes');
+    const itensRef = collection(this.firestore, 'itens');
 
-    localStorage.setItem('reivindicacoes', JSON.stringify(this.reivindicacoes));
-    localStorage.setItem('itens', JSON.stringify(this.itens));
+    this.itens.forEach(item => {
+      const itemRef = doc(this.firestore, `itens/${item.id}`);
+      setDoc(itemRef, item);
+    });
+
+    this.reivindicacoesComItem.forEach(r => {
+      const reivindicacaoRef = doc(this.firestore, `reivindicacoes/${r.id}`);
+      const { nome, descricao, status, local } = r.item || {};
+      const novaReivindicacao = {
+        usuario: r.usuario,
+        item: nome,
+        descricao,
+        status,
+        data: r.data,
+        local: local || '',
+      };
+      setDoc(reivindicacaoRef, novaReivindicacao);
+    });
   }
 
   montarReivindicacoesComItem() {
     this.reivindicacoesComItem = this.reivindicacoes.map((r, idx) => {
       const nomeItem = typeof r.item === 'string' ? r.item : r.item?.nome;
       const item = this.itens.find(i => i.nome === nomeItem);
-      return { ...r, item, id: idx + 1 };
+      return { ...r, item, indice: idx + 1 };
     });
   }
 
-  registrarHistorico(acao: string, item: string, usuario: string) {
-    const historico = JSON.parse(localStorage.getItem('historico') || '[]');
-    historico.push({
+  async registrarHistorico(acao: string, item: string, usuario: string) {
+    const historicoRef = collection(this.firestore, 'historico');
+    await addDoc(historicoRef, {
       acao,
       item,
       usuario,
       data: new Date().toISOString()
     });
-    localStorage.setItem('historico', JSON.stringify(historico));
   }
+
 }
 

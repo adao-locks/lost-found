@@ -47,13 +47,19 @@
               <strong>{{ item.nome }}</strong>
               <span>{{ item.local }} - {{ item.data | date: 'dd/MM/yyyy' }}</span>
             </div>
-            <span class="status" [ngClass]="item.status">{{ item.status | titlecase }}</span>
+            <span class="status"
+                class="status"
+                [ngClass]="{
+                  'pendente': item.status === 'disponivel',
+                  'aprovado': item.status === 'devolvido',
+                  'recusado': item.status === 'descartado'
+                }">{{ item.status | titlecase }}</span>
           </div>
         </div>
       </div>
 
       <div class="dashboard-card">
-        <h3>Reivindicações Pendentes</h3>
+        <h3>Reivindicações Disponíveis</h3>
         <div class="pending-claims">
         <div class="claim-item" *ngFor="let r of reivindicacoesPendentes">
           <div class="claim-info">

@@ -15,7 +15,7 @@
         <div *ngFor="let r of reivindicacoesComItem; trackBy: trackByReivindicacao">
           <div class="claim-item">
             <div class="claim-info">
-              <strong>{{ r.id }} - {{ r.item.nome }}</strong>
+              <strong>{{ r.item.nome }}</strong>
               <span>{{ r.usuario }}</span>
             </div>
 
@@ -30,7 +30,7 @@
 
             <div
             class="claim-actions"
-            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'pendente'">
+            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'disponivel'">
               <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
               <button class="btn-reject" (click)="recusar(r)">Recusar</button>
             </div>
@@ -39,9 +39,9 @@
               <span
                 class="status"
                 [ngClass]="{
-                  pending: r.status === 'pendente',
-                  active: r.status === 'aprovado',
-                  returned: r.status === 'recusado'
+                  'pendente': r.status === 'disponivel',
+                  'aprovado': r.status === 'devolvido',
+                  'recusado': r.status === 'descartado'
                 }"
               >
                 {{ r.status | titlecase }}

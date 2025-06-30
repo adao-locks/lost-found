@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Firestore, collection, doc, getDocs, setDoc } from '@angular/fire/firestore';
+import { inject } from '@angular/core';
 
 interface Item {
+  id?: string;
   nome: string;
   local: string;
   data: string;
@@ -9,9 +12,10 @@ interface Item {
 }
 
 interface Reivindicacao {
+  id?: string;
   usuario: string;
   item: string;
-  status: 'pendente' | 'aprovado' | 'recusado';
+  status: 'disponivel' | 'aprovado' | 'recusado';
 }
 
 @Component({
@@ -21,6 +25,7 @@ interface Reivindicacao {
     standalone: false
 })
 export class DashboardComponent {
+  private firestore: Firestore = inject(Firestore);
   usuarioLogado = { nome: '', tipo: 'usuário' };
   itens: Item[] = [];
   itensRecentes: Item[] = [];
@@ -35,18 +40,18 @@ export class DashboardComponent {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const usuarioStr = localStorage.getItem('usuarioLogado');
     if (usuarioStr) {
       this.usuarioLogado = JSON.parse(usuarioStr);
       document.body.classList.toggle('admin', this.usuarioLogado.tipo === 'admin');
     }
 
-    const itensSalvos = localStorage.getItem('itens');
-    this.itens = itensSalvos ? JSON.parse(itensSalvos) : [];
+    const itensSnapshot = await getDocs(collection(this.firestore, 'itens'));
+    this.itens = itensSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Item[];
 
-    const reivSalvas = localStorage.getItem('reivindicacoes');
-    this.reivindicacoes = reivSalvas ? JSON.parse(reivSalvas) : [];
+    const reivSnapshot = await getDocs(collection(this.firestore, 'reivindicacoes'));
+    this.reivindicacoes = reivSnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Omit<Reivindicacao, 'id'>) })) as Reivindicacao[];
 
     this.calcularEstatisticas();
     this.carregarItensRecentes();
@@ -60,14 +65,14 @@ export class DashboardComponent {
   }
 
   carregarReivindicacoesPendentes() {
-    this.reivindicacoesPendentes = this.reivindicacoes.filter(r => r.status === 'pendente');
+    this.reivindicacoesPendentes = this.reivindicacoes.filter(r => r.status === 'disponivel');
   }
 
   calcularEstatisticas() {
     this.stats.total = this.itens.length;
     this.stats.disponiveis = this.itens.filter(i => i.status === 'disponivel').length;
     this.stats.devolvidos = this.itens.filter(i => i.status === 'devolvido').length;
-    this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'pendente').length;
+    this.stats.reivindicacoes = this.reivindicacoes.filter(r => r.status === 'disponivel').length;
   }
 
   aprovarReivindicacao(reivindicacao: any) {
@@ -94,23 +99,34 @@ export class DashboardComponent {
     this.salvarAlteracoes();
   }
 
-  salvarAlteracoes() {
-    localStorage.setItem('reivindicacoes', JSON.stringify(this.reivindicacoes));
-    localStorage.setItem('itens', JSON.stringify(this.itens));
+  async salvarAlteracoes() {
+    const itensRef = collection(this.firestore, 'itens');
+    const reivsRef = collection(this.firestore, 'reivindicacoes');
+
+    for (const item of this.itens) {
+      const itemRef = doc(this.firestore, `itens/${item.id}`);
+      await setDoc(itemRef, item);
+    }
+
+    for (const r of this.reivindicacoes) {
+      const rRef = doc(this.firestore, `reivindicacoes/${r.id}`);
+      await setDoc(rRef, r);
+    }
 
     this.calcularEstatisticas();
     this.carregarItensRecentes();
     this.carregarReivindicacoesPendentes();
   }
 
-  registrarHistorico(acao: string, item: string, usuario: string) {
-    const historico = JSON.parse(localStorage.getItem('historico') || '[]');
-    historico.push({
+  async registrarHistorico(acao: string, item: string, usuario: string) {
+    const historicoRef = collection(this.firestore, 'historico');
+    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    await setDoc(doc(historicoRef, id), {
       acao,
       item,
       usuario,
       data: new Date().toISOString()
     });
-    localStorage.setItem('historico', JSON.stringify(historico));
   }
+
 }
