@@ -8,11 +8,59 @@
     <div class="section-header">
     </div>
 
+    <div class="stat-card">
+      <div class="item-filter">
+        <label for="item" style="text-wrap: nowrap;">Filtrar por item:</label>
+        <input
+          type="text"
+          name="item"
+          placeholder="Digite o nome do item aqui..."
+          [(ngModel)]="filtroItem"
+          (ngModelChange)="filtrarItem()"
+          class="filter-input"
+        />
+      </div>
+      <div class="item-filter">
+        <label for="users" style="text-wrap: nowrap;">Filtrar por Usuário:</label>
+        <input
+          type="text"
+          name="users"
+          placeholder="Digite o nome do usuário aqui..."
+          [(ngModel)]="filtroUser"
+          (ngModelChange)="filtrarUsuario()"
+          class="filter-input"
+        />
+      </div>
+      <div class="item-filter">
+        <label for="locals" style="text-wrap: nowrap;">Filtrar por Local:</label>
+        <input
+          type="text"
+          name="locals"
+          placeholder="Digite o local aqui..."
+          [(ngModel)]="filtroLocal"
+          (ngModelChange)="filtrarLocal()"
+          class="filter-input"
+        />
+      </div>
+      <div class="item-filter">
+        <label for="descs" style="text-wrap: nowrap;">Filtrar por Descrição:</label>
+        <input
+          type="text"
+          name="descs"
+          placeholder="Digite a descrição aqui..."
+          [(ngModel)]="filtroDesc"
+          (ngModelChange)="filtrarDesc()"
+          class="filter-input"
+        />
+      </div>
+    </div>
+
     <div class="dashboard-card">
       <h3>Lista de Reivindicações</h3>
 
+
       <div class="pending-claims">
-        <div *ngFor="let r of reivindicacoesComItem; trackBy: trackByReivindicacao">
+        <div *ngFor="let r of reivindicacoesFiltradas; trackBy: trackByReivindicacao">
           <div class="claim-item">
             <div class="claim-info">
               <strong>{{ r.item.nome }}</strong>

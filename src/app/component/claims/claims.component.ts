@@ -14,6 +14,11 @@ export class ClaimsComponent implements OnInit {
   reivindicacoes: any[] = [];
   reivindicacoesComItem: any[] = [];
   itens: any[] = [];
+  filtroItem: string = '';
+  filtroUser: string = '';
+  filtroLocal: string = '';
+  filtroDesc: string = '';
+  reivindicacoesFiltradas: any[] = [];
 
   trackByReivindicacao(index: number, r: any): any {
     return r.id;
@@ -29,6 +34,38 @@ export class ClaimsComponent implements OnInit {
     this.itens = itensSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     this.montarReivindicacoesComItem();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem;
+  }
+
+  filtrarItem() {
+    const texto = this.filtroItem.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.item.nome.toLowerCase().includes(texto) ||
+      r.usuario.toLowerCase().includes(texto)
+    );
+  }
+
+  filtrarUsuario() {
+    const texto = this.filtroUser.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.usuario.toLowerCase().includes(texto)
+    );
+  }
+
+  filtrarLocal() {
+    const texto = this.filtroLocal.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.item.local.toLowerCase().includes(texto) ||
+      r.usuario.toLowerCase().includes(texto)
+    );
+  }
+
+  filtrarDesc() {
+    const texto = this.filtroDesc.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.item.descricao.toLowerCase().includes(texto) ||
+      r.usuario.toLowerCase().includes(texto)
+    );
   }
 
   aprovar(r: any) {
