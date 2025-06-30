@@ -23,11 +23,10 @@ export class LoginComponent {
       const userCredential = await signInWithEmailAndPassword(this.auth, this.email, this.password);
       const user = userCredential.user;
 
-      // Se quiser armazenar dados adicionais, crie lógica para buscá-los do Firestore
       const usuario = {
         email: user.email,
         nome: user.displayName || user.email,
-        tipo: user.email === 'admin@example.com' ? 'admin' : 'usuário'
+        tipo: user.email === 'admin@example.com' || 'colaborador@example.com' ? 'admin' : 'usuário'
       };
 
       localStorage.setItem('isLoggedIn', 'true');
@@ -38,9 +37,9 @@ export class LoginComponent {
     }
   }
 
-  async loginComoColaborador() {
-    this.email = 'colaborador@example.com';
-    this.password = 'colab123';
+  async loginComoVisitante() {
+    this.email = 'visitante@example.com';
+    this.password = 'visit123';
     await this.onLogin();
   }
 }

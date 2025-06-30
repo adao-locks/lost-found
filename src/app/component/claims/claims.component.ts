@@ -37,57 +37,24 @@ export class ClaimsComponent implements OnInit {
     this.reivindicacoesFiltradas = this.reivindicacoesComItem;
   }
 
-  filtrarItem() {
-    const texto = this.filtroItem.toLowerCase();
-    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
-      r.item.nome.toLowerCase().includes(texto) ||
-      r.usuario.toLowerCase().includes(texto)
-    );
-  }
-
-  filtrarUsuario() {
-    const texto = this.filtroUser.toLowerCase();
-    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
-      r.usuario.toLowerCase().includes(texto)
-    );
-  }
-
-  filtrarLocal() {
-    const texto = this.filtroLocal.toLowerCase();
-    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
-      r.item.local.toLowerCase().includes(texto) ||
-      r.usuario.toLowerCase().includes(texto)
-    );
-  }
-
-  filtrarDesc() {
-    const texto = this.filtroDesc.toLowerCase();
-    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
-      r.item.descricao.toLowerCase().includes(texto) ||
-      r.usuario.toLowerCase().includes(texto)
-    );
-  }
-
   aprovar(r: any) {
     if (!r.item) return;
 
     r.item.status = 'devolvido';
+
     this.registrarHistorico('Aprovado', r.item.nome, this.usuarioLogado.nome);
-    console.log('Historico registrado!');
     this.persistirDados();
-    this.montarReivindicacoesComItem();
-    console.log('Processo finalizado!');
+    this.ngOnInit();
   }
 
   recusar(r: any) {
     if (!r.item) return;
 
     r.item.status = 'descartado';
+
     this.registrarHistorico('Recusado', r.item.nome, this.usuarioLogado.nome);
-    console.log('Historico registrado!');
     this.persistirDados();
-    this.montarReivindicacoesComItem();
-    console.log('Processo finalizado!');
+    this.ngOnInit();
   }
 
   persistirDados() {
@@ -130,6 +97,37 @@ export class ClaimsComponent implements OnInit {
       usuario,
       data: new Date().toISOString()
     });
+  }
+
+  filtrarItem() {
+    const texto = this.filtroItem.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.item.nome.toLowerCase().includes(texto) ||
+      r.usuario.toLowerCase().includes(texto)
+    );
+  }
+
+  filtrarUsuario() {
+    const texto = this.filtroUser.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.usuario.toLowerCase().includes(texto)
+    );
+  }
+
+  filtrarLocal() {
+    const texto = this.filtroLocal.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.item.local.toLowerCase().includes(texto) ||
+      r.usuario.toLowerCase().includes(texto)
+    );
+  }
+
+  filtrarDesc() {
+    const texto = this.filtroDesc.toLowerCase();
+    this.reivindicacoesFiltradas = this.reivindicacoesComItem.filter(r =>
+      r.item.descricao.toLowerCase().includes(texto) ||
+      r.usuario.toLowerCase().includes(texto)
+    );
   }
 
 }

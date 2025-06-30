@@ -76,7 +76,7 @@ export class DashboardComponent {
   }
 
   aprovarReivindicacao(reivindicacao: any) {
-    reivindicacao.status = 'aprovado';
+    reivindicacao.status = 'devolvido';
 
     const item = this.itens.find(i => i.nome === reivindicacao.item);
     if (item) {
@@ -88,12 +88,12 @@ export class DashboardComponent {
   }
 
   recusarReivindicacao(reivindicacao: any) {
-    reivindicacao.status = 'recusado';
+    reivindicacao.status = 'descartado';
 
     const item = this.itens.find(i => i.nome === reivindicacao.item);
     if (item) {
       item.status = 'descartado';
-      this.registrarHistorico('Recusa', item.nome, this.usuarioLogado.nome);
+      this.registrarHistorico('Recusado', item.nome, this.usuarioLogado.nome);
     }
 
     this.salvarAlteracoes();
