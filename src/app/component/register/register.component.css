@@ -165,3 +165,31 @@
   text-align: center;
   align-items: center;
 }
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .form-grid {
+    flex-direction: column;
+  }
+
+  .form-group {
+    flex: 1 1 100%;
+  }
+
+  .recent-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .item-info {
+    max-width: 100%;
+  }
+
+  .status {
+    align-self: flex-end;
+  }
+}
