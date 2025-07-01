@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Firestore, collection, doc, getDocs, setDoc, addDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-claims',
@@ -19,6 +21,29 @@ export class ClaimsComponent implements OnInit {
   filtroLocal: string = '';
   filtroDesc: string = '';
   reivindicacoesFiltradas: any[] = [];
+  @ViewChild('relatorioPDF', { static: false }) relatorioPDF!: ElementRef;
+
+  itensexp = [
+    { titulo: 'Chave encontrada', dataCadastro: new Date() },
+    { titulo: 'Celular Samsung', dataCadastro: new Date('2025-06-15') },
+    // ...dados reais aqui
+  ];
+
+  exportarPDF() {
+    const element = this.relatorioPDF.nativeElement;
+
+    html2canvas(element).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('relatorio-itens.pdf');
+    });
+  }
 
   trackByReivindicacao(index: number, r: any): any {
     return r.id;

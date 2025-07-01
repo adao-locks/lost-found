@@ -8,7 +8,7 @@
     <div class="section-header">
     </div>
 
-    <div class="dashboard-card">
+    <div #relatorioPDF id="relatorio-pdf" class="dashboard-card">
       <h3>Registro de Atividades</h3>
 
       <div class="history-timeline">
@@ -44,5 +44,12 @@
         </div>
       </div>
     </div>
+
+    <div class="export-card">
+      <button class="btn-export" (click)="exportarPDF()">
+        Exportar PDF
+      </button>
+    </div>
+
   </div>
 </div>

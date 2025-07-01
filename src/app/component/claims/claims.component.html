@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div class="dashboard-card">
+    <div class="dashboard-card" #relatorioPDF id="relatorio-pdf">
       <h3>Lista de Reivindicações</h3>
 
 
@@ -98,5 +98,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="export-card">
+    <button class="btn-export" (click)="exportarPDF()">
+      Exportar PDF
+    </button>
   </div>
 </div>
