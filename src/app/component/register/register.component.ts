@@ -60,13 +60,13 @@ export class RegisterComponent {
     const itensRef = collection(this.firestore, 'itens');
     await addDoc(itensRef, novoItem);
 
-    // Se for disponível, adiciona reivindicação
     if (this.status === 'disponivel') {
       const reivsRef = collection(this.firestore, 'reivindicacoes');
       await addDoc(reivsRef, {
         usuario: this.usuarioLogado?.nome || 'Usuário',
         item: this.nome,
         status: 'disponivel',
+        posse: this.posse,
         data: this.data
       });
     }
