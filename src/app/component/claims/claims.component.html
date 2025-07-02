@@ -65,6 +65,7 @@
             <div class="claim-info">
               <strong>{{ r.item.nome }}</strong>
               <span>{{ r.usuario }}</span>
+              <span>posse: {{ r.posse }}</span>
             </div>
 
             <div class="claim-info">
@@ -76,14 +77,7 @@
               <span>{{ r.item.data | date: 'dd/MM/yyyy' }}</span>
             </div>
 
-            <div
-            class="claim-actions"
-            *ngIf="usuarioLogado.tipo === 'admin' && r.status === 'disponivel'">
-              <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
-              <button class="btn-reject" (click)="recusar(r)">Recusar</button>
-            </div>
-
-            <div class="status">
+            <div class="status stt-div">
               <span
                 class="status"
                 [ngClass]="{
@@ -94,6 +88,18 @@
               >
                 {{ r.status | titlecase }}
               </span>
+            </div>
+
+            <div
+              class="placeholder-actions"
+              *ngIf="((usuarioLogado.tipo === 'admin') && !(r.status === 'disponivel'))">
+            </div>
+
+            <div
+            class="claim-actions btns-div"
+            *ngIf="usuarioLogado.nome != 'visitante@example.com' && r.status === 'disponivel'">
+              <button class="btn-approve" (click)="aprovar(r)">Aprovar</button>
+              <button class="btn-reject" (click)="recusar(r)">Recusar</button>
             </div>
         </div>
       </div>

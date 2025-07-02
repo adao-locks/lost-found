@@ -42,3 +42,75 @@
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
 }
+
+.pending-claims {
+  display: grid;
+  gap: 1rem;
+}
+
+.claim-item {
+  display: grid;
+  grid-template-areas:
+    "info1 info2 info3 status actions";
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  border-left: 4px solid #007bff;
+  border-radius: 8px;
+  background-color: #f5f7fa;
+  align-items: center;
+}
+
+.claim-info:nth-of-type(1) {
+  grid-area: info1;
+}
+
+.claim-info:nth-of-type(2) {
+  grid-area: info2;
+}
+
+.claim-info:nth-of-type(3) {
+  grid-area: info3;
+}
+
+.claim-actions,
+.placeholder-actions {
+  grid-area: actions;
+  width: min-content;
+}
+
+.status {
+  grid-area: status;
+}
+
+.status,
+.claim-actions,
+.claim-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stt-div,
+.btns-div {
+  display: flex;
+  gap: 0.25rem;
+  width: min-content;
+}
+
+@media (max-width: 600px) {
+  .claim-item {
+    grid-template-columns: 1fr;
+  }
+
+  .claim-actions {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.placeholder-actions {
+  visibility: hidden;
+  height: 0;
+}

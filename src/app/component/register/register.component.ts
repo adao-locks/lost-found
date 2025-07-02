@@ -16,6 +16,7 @@ export class RegisterComponent {
   fileInput!: HTMLInputElement;
   nome = '';
   local = '';
+  posse = '';
   data = '';
   descricao: string = '';
   status: 'disponivel' | 'devolvido' | 'descartado' = 'disponivel';
@@ -49,6 +50,7 @@ export class RegisterComponent {
     const novoItem = {
       nome: this.nome,
       local: this.local,
+      posse: this.posse,
       data: this.data,
       status: this.status,
       descricao: this.descricao,
@@ -97,6 +99,7 @@ export class RegisterComponent {
   resetForm() {
     this.nome = '';
     this.local = '';
+    this.posse = '';
     this.data = new Date().toISOString().split('T')[0];
     this.status = 'disponivel';
     this.descricao = '';
