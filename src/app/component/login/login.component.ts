@@ -26,7 +26,7 @@ export class LoginComponent {
       const usuario = {
         email: user.email,
         nome: user.displayName || user.email,
-        tipo: user.email === 'admin@example.com' || 'colaborador@example.com' ? 'admin' : 'usuário'
+        tipo: (user.email === 'admin@example.com' || user.email === 'colaborador@example.com') ? 'admin' : 'usuário'
       };
 
       localStorage.setItem('isLoggedIn', 'true');
